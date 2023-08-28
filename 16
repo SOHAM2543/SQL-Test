@@ -1,0 +1,11 @@
+SELECT company, 
+       AVG(salary) AS median_salary
+FROM (
+  SELECT company, 
+         salary, 
+         ROW_NUMBER() OVER (PARTITION BY company ORDER BY salary) AS row_num,
+         COUNT(*) OVER (PARTITION BY company) AS total_count
+  FROM employees
+) ranked
+WHERE row_num = (total_count + 1) / 2 OR row_num = (total_count + 2) / 2
+GROUP BY company;
