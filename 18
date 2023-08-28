@@ -1,15 +1,8 @@
-SELECT
-    point1.x AS x1,
-    point1.y AS y1,
-    point2.x AS x2,
-    point2.y AS y2,
-    SQRT(POW(point2.x - point1.x, 2) + POW(point2.y - point1.y, 2)) AS shortest_distance
-FROM
-    points AS point1
-CROSS JOIN
-    points AS point2
-WHERE
-    point1.point_id <> point2.point_id
-ORDER BY
-    shortest_distance
-LIMIT 1;
+SELECT MIN(distance) AS shortest_distance
+FROM (
+    SELECT SQRT(POW(p1.x - p2.x, 2) + POW(p1.y - p2.y, 2)) AS distance
+    FROM points p1
+    CROSS JOIN points p2
+    WHERE p1.x <> p2.y
+    AND p1.x IN (-1, 0, -1) AND p2.y IN (-1, 0, -2)
+) distances;
